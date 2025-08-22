@@ -1,0 +1,98 @@
+{
+    "site": {
+        "name": "Your Site Name",
+        "title": "Your Site Title - Description",
+        "description": "A comprehensive description of your website that appears in search results and social media shares.",
+        "keywords": "keyword1, keyword2, keyword3, web development, responsive design",
+        "author": "Your Name",
+        "url": "https://yoursite.com",
+        "language": "en",
+        "theme_color": "#2563eb",
+        "background_color": "#ffffff"
+    },
+    "social": {
+        "og_image": "/images/og-image.jpg",
+        "twitter_creator": "@yourusername",
+        "twitter_site": "@yoursite"
+    },
+    "navigation": [
+        {
+            "label": "Home",
+            "url": "/",
+            "active": true
+        },
+        {
+            "label": "About",
+            "url": "/about"
+        },
+        {
+            "label": "Services",
+            "url": "/services"
+        },
+        {
+            "label": "Contact",
+            "url": "/contact"
+        }
+    ],
+    "hero": {
+        "heading": "Welcome to Your Site",
+        "description": "Create amazing experiences with our modern, responsive template system.",
+        "actions": [
+            {
+                "label": "Get Started",
+                "url": "#content-section",
+                "type": "primary"
+            },
+            {
+                "label": "Learn More",
+                "url": "/about",
+                "type": "secondary"
+            }
+        ]
+    },
+    "content": {
+        "sections": [
+            {
+                "type": "feature",
+                "title": "Responsive Design",
+                "description": "Optimized for all devices and screen sizes.",
+                "icon": "📱"
+            },
+            {
+                "type": "feature",
+                "title": "SEO Optimized",
+                "description": "Built with search engine optimization in mind.",
+                "icon": "🔍"
+            },
+            {
+                "type": "feature",
+                "title": "Fast Loading",
+                "description": "Lightweight and performance-focused architecture.",
+                "icon": "⚡"
+            }
+        ]
+    },
+    "footer": {
+        "text": "© 2024 Your Site Name. All rights reserved.",
+        "links": [
+            {
+                "label": "Privacy Policy",
+                "url": "/privacy"
+            },
+            {
+                "label": "Terms of Service",
+                "url": "/terms"
+            },
+            {
+                "label": "Support",
+                "url": "/support"
+            }
+        ]
+    },
+    "performance": {
+        "lazy_loading": true,
+        "preload_critical": true,
+        "cache_duration": 86400
+    }
+}
+
