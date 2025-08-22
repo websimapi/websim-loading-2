@@ -8,12 +8,46 @@
         "url": "https://yoursite.com",
         "language": "en",
         "theme_color": "#2563eb",
-        "background_color": "#ffffff"
+        "background_color": "#ffffff",
+        "tagline": "Your site tagline for SEO",
+        "logo": "/images/logo.png",
+        "favicon": "/favicon.ico",
+        "canonical_domain": "https://yoursite.com",
+        "timezone": "America/New_York",
+        "locale": "en_US",
+        "currency": "USD",
+        "organization_type": "Organization"
     },
     "social": {
         "og_image": "/images/og-image.jpg",
         "twitter_creator": "@yourusername",
         "twitter_site": "@yoursite"
+    },
+    "seo": {
+        "meta_title_suffix": " | Your Site Name",
+        "meta_description_max_length": 155,
+        "keywords_max_count": 10,
+        "og_image_width": 1200,
+        "og_image_height": 630,
+        "twitter_card_type": "summary_large_image",
+        "robots": "index, follow",
+        "google_site_verification": "",
+        "bing_site_verification": "",
+        "yandex_verification": ""
+    },
+    "accessibility": {
+        "high_contrast_mode": false,
+        "reduced_motion": false,
+        "font_scaling": 1.0,
+        "focus_indicators": true,
+        "screen_reader_shortcuts": true,
+        "keyboard_navigation": true,
+        "aria_labels": {
+            "search": "Search the website",
+            "menu": "Main navigation menu",
+            "skip_to_content": "Skip to main content",
+            "close_menu": "Close navigation menu"
+        }
     },
     "navigation": [
         {
@@ -73,7 +107,7 @@
         ]
     },
     "footer": {
-        "text": "© 2024 Your Site Name. All rights reserved.",
+        "text": " 2024 Your Site Name. All rights reserved.",
         "links": [
             {
                 "label": "Privacy Policy",
@@ -92,7 +126,26 @@
     "performance": {
         "lazy_loading": true,
         "preload_critical": true,
-        "cache_duration": 86400
+        "cache_duration": 86400,
+        "critical_css_inline": true,
+        "defer_non_critical_css": true,
+        "compress_images": true,
+        "webp_support": true,
+        "prefetch_dns": ["fonts.googleapis.com", "www.google-analytics.com"]
+    },
+    "analytics": {
+        "google_analytics_id": "",
+        "google_tag_manager_id": "",
+        "facebook_pixel_id": "",
+        "hotjar_id": "",
+        "track_page_views": true,
+        "track_outbound_links": true,
+        "track_downloads": true
+    },
+    "integrations": {
+        "contact_form_endpoint": "",
+        "newsletter_endpoint": "",
+        "search_endpoint": "",
+        "api_base_url": ""
     }
 }
-

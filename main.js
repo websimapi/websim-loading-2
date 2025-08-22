@@ -5,20 +5,42 @@ class TemplateApp {
         this.isInitialized = false;
         this.retryCount = 0;
         this.maxRetries = 3;
+        this.loadingProgress = 0;
+        this.loadingSteps = [
+            'Loading configuration...',
+            'Setting up components...',
+            'Initializing accessibility...',
+            'Optimizing performance...',
+            'Ready!'
+        ];
     }
 
     async init() {
         try {
-            TemplateUtils.showLoading();
+            this.updateLoadingProgress(0, this.loadingSteps[0]);
             
             // Load configuration
             this.config = await TemplateUtils.loadJSON('config.json');
+            this.updateLoadingProgress(20, this.loadingSteps[1]);
             
-            // Initialize all components
+            // Initialize SEO
+            if (window.SEOManager) {
+                window.SEOManager.init(this.config);
+            }
+            this.updateLoadingProgress(40, this.loadingSteps[2]);
+            
+            // Initialize accessibility
+            if (window.AccessibilityManager) {
+                window.AccessibilityManager.init(this.config);
+            }
+            this.updateLoadingProgress(60, this.loadingSteps[3]);
+            
+            // Setup components
             await this.setupComponents();
+            this.updateLoadingProgress(80, this.loadingSteps[4]);
             
-            // Initialize accessibility features
-            TemplateUtils.initializeAccessibility();
+            // Initialize performance monitoring
+            this.initPerformanceMonitoring();
             
             // Setup event listeners
             this.setupEventListeners();
@@ -34,6 +56,53 @@ class TemplateApp {
         } catch (error) {
             this.handleInitError(error);
         }
+    }
+
+    updateLoadingProgress(progress, text) {
+        this.loadingProgress = progress;
+        const progressBar = document.getElementById('progress-bar');
+        const loadingText = document.getElementById('loading-text');
+        
+        if (progressBar) {
+            progressBar.style.width = `${progress}%`;
+        }
+        
+        if (loadingText && text) {
+            loadingText.textContent = text;
+        }
+    }
+
+    initPerformanceMonitoring() {
+        // Enhanced performance monitoring
+        if ('PerformanceObserver' in window) {
+            const observer = new PerformanceObserver((list) => {
+                list.getEntries().forEach(entry => {
+                    this.logPerformanceMetric(entry);
+                });
+            });
+            
+            try {
+                observer.observe({ entryTypes: ['navigation', 'resource', 'paint', 'largest-contentful-paint'] });
+            } catch (e) {
+                console.warn('Performance observer not fully supported:', e);
+            }
+        }
+    }
+
+    logPerformanceMetric(entry) {
+        const metrics = {
+            navigation: () => console.log('Navigation timing:', entry),
+            resource: () => {
+                if (entry.duration > 1000) {
+                    console.warn('Slow resource loading:', entry.name, entry.duration + 'ms');
+                }
+            },
+            paint: () => console.log(entry.name + ':', entry.startTime + 'ms'),
+            'largest-contentful-paint': () => console.log('LCP:', entry.startTime + 'ms')
+        };
+        
+        const handler = metrics[entry.entryType];
+        if (handler) handler();
     }
 
     async setupComponents() {
@@ -273,4 +342,3 @@ window.addEventListener('error', (e) => {
     console.error('Global error:', e.error);
     TemplateUtils.handleErrors(e.error, 'Global');
 });
-

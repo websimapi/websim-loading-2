@@ -2,10 +2,20 @@
 class TemplateUtils {
     static async loadJSON(url) {
         try {
-            const response = await fetch(url);
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
+            
+            const response = await fetch(url, { 
+                signal: controller.signal,
+                cache: 'no-cache'
+            });
+            
+            clearTimeout(timeoutId);
+            
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
+            
             return await response.json();
         } catch (error) {
             console.error(`Failed to load JSON from ${url}:`, error);
@@ -72,6 +82,27 @@ class TemplateUtils {
                 }
             }
         });
+
+        // Enhanced SEO meta tags
+        const additionalTags = [
+            { id: 'app-name', attr: 'content', content: config.site.name },
+            { id: 'ms-tooltip', attr: 'content', content: config.site.description },
+            { id: 'ms-starturl', attr: 'content', content: '/' },
+            { id: 'ms-navbutton', attr: 'content', content: config.site.theme_color }
+        ];
+
+        additionalTags.forEach(tag => {
+            const element = document.getElementById(tag.id);
+            if (element) {
+                element.setAttribute(tag.attr, tag.content);
+            }
+        });
+
+        // Update RSS feed if available
+        const rssFeed = document.getElementById('rss-feed');
+        if (rssFeed && config.site.rss_feed) {
+            rssFeed.href = config.site.rss_feed;
+        }
 
         // Update structured data
         const structuredData = document.getElementById('structured-data');
@@ -221,8 +252,90 @@ class TemplateUtils {
             timeout = setTimeout(later, wait);
         };
     }
+
+    static detectFeatures() {
+        const features = {
+            webp: this.supportsWebP(),
+            avif: this.supportsAVIF(),
+            intersection: 'IntersectionObserver' in window,
+            serviceWorker: 'serviceWorker' in navigator,
+            localStorage: this.supportsLocalStorage(),
+            sessionStorage: this.supportsSessionStorage(),
+            fetch: 'fetch' in window,
+            promise: 'Promise' in window,
+            customElements: 'customElements' in window
+        };
+        
+        window.features = { ...window.features, ...features };
+        return features;
+    }
+
+    static supportsWebP() {
+        return window.features?.webp || false;
+    }
+
+    static supportsAVIF() {
+        return window.features?.avif || false;
+    }
+
+    static supportsLocalStorage() {
+        try {
+            const test = '__test__';
+            localStorage.setItem(test, test);
+            localStorage.removeItem(test);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    static supportsSessionStorage() {
+        try {
+            const test = '__test__';
+            sessionStorage.setItem(test, test);
+            sessionStorage.removeItem(test);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    static optimizeImages() {
+        const images = document.querySelectorAll('img[data-src]');
+        images.forEach(img => {
+            let src = img.dataset.src;
+            
+            // Use WebP/AVIF if supported
+            if (this.supportsAVIF() && src.includes('.jpg') || src.includes('.png')) {
+                src = src.replace(/\.(jpg|png)$/i, '.avif');
+            } else if (this.supportsWebP() && src.includes('.jpg') || src.includes('.png')) {
+                src = src.replace(/\.(jpg|png)$/i, '.webp');
+            }
+            
+            img.src = src;
+        });
+    }
+
+    static createResponsiveImage(src, alt, sizes = '100vw') {
+        const img = document.createElement('img');
+        img.alt = alt;
+        img.loading = 'lazy';
+        img.sizes = sizes;
+        
+        // Generate srcset for different resolutions
+        const breakpoints = [480, 768, 1024, 1200];
+        const srcset = breakpoints.map(width => {
+            const extension = src.split('.').pop();
+            const baseName = src.replace(`.${extension}`, '');
+            return `${baseName}-${width}w.${extension} ${width}w`;
+        }).join(', ');
+        
+        img.srcset = srcset;
+        img.src = src; // fallback
+        
+        return img;
+    }
 }
 
 // Make TemplateUtils globally available
 window.TemplateUtils = TemplateUtils;
-
